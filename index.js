@@ -63,7 +63,19 @@ app.get('/users/:id', async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+app.get('/analytics/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const analytics = await User.findOne({ ShortUrl: id });
 
+        if (!analytics) return res.status(404).json({ message: 'Short URL Not Found' });
+
+        return res.status(200).json({ shortUrl: id, totalClicks: analytics.NOofClicks });
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 app.listen(3000, () => {
     console.log('Server started on port 3000');
 });
